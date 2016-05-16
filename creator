@@ -1,0 +1,30 @@
+#!/Users/user/.rbenv/shims/ruby
+require( 'pg' )
+
+
+begin
+
+      con = PG.connect :dbname => 'dbl', :user => 'user'
+      con.exec "DROP TABLE IF EXISTS Teams CASCADE"
+      con.exec "CREATE TABLE Teams(
+                             Id SERIAL4 PRIMARY KEY, 
+                             Name VARCHAR(255),
+                             Location VARCHAR(255)
+               )"
+
+      con.exec "DROP TABLE IF EXISTS Matches CASCADE"
+      con.exec "CREATE TABLE Matches(
+                             Id SERIAL4 PRIMARY KEY, 
+                             at_score INT4,
+                             ht_score INT4,
+                             at_id INT REFERENCES Teams(id),
+                             ht_id INT REFERENCES Teams(id),
+                             match_date timestamp
+                             )"
+     
+
+ensure
+
+  con.close if con
+
+end
